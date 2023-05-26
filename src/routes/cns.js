@@ -47,11 +47,11 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
 router.get('/', asyncMiddleware(async (req, res) => {
     // get cookie
-    console.log(req.cookie)
-    if( !req.cookie.username || !req.cookie.password ){
+    console.log(req.cookies)
+    if( !req.cookies['username'] || !req.cookies['password'] ){
         return res.status(401).json({'message': 'bye'});
     }
-    if( req.cookie.username === 'CNS-user' && req.cookie.password === 'CNS-password' ){
+    if( req.cookies['username'] === 'CNS-user' && req.cookies['password'] === 'CNS-password' ){
         return res.status(200).json({'message': "HERE YOU GO BABY!"});
     }
     return res.status(401).json({'message': 'bye'});
@@ -60,12 +60,14 @@ router.get('/', asyncMiddleware(async (req, res) => {
 /*
 JWT-based authentication
 */
-//router.post('/', asyncMiddleware(async (req, res) => {
+/*
+router.post('/', asyncMiddleware(async (req, res) => {
     //set cookies
-//}));
+}));
 
-//router.get('/', asyncMiddleware(async (req, res) => {
+router.get('/', asyncMiddleware(async (req, res) => {
     //verify cookies
-//}));
+}));
+*/
 
 module.exports = router;
