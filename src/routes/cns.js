@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const cookieParser = require('cookie-parser');
 
 const asyncMiddleware = fn => (req, res, next) => {
     Promise.resolve(fn(req, res, next))
@@ -37,21 +37,44 @@ router.get('/', asyncMiddleware(async (req, res) => {
     if( !auth ){
         return res.status(401).json({'message': 'bye'});
     }
-    console.log(auth)
-    return res.status(200).json({});
+    const basic_auth = auth.split(' ')
+    if( basic_auth[0] !== 'Basic' ){
+        return res.status(401).json({'message': 'bye'});
+    }
+    const credentials = Buffer.from(basic_auth[1], 'base64').toString('ascii')
+    const credentials_parse = credentials.split(':')
+    if( credentials_parse.length != 2 ){
+        return res.status(401).json({'message': 'bye'});
+    }
+    const username = credentials_parse[0];
+    const password = credentials_parse[1];
+    if( username === 'CNS-user' && password === 'CNS-password'){
+        return res.status(200).json({'message': "HERE YOU GO BABY!"});
+    }
+    return res.status(401).json({'message': 'bye'});
 }));
 module.exports = router;
 /* 
 Cookie-based authentication
 */
-//router.post('/', asyncMiddleware(async (req, res) => {
+/*
+router.post('/', asyncMiddleware(async (req, res) => {
     //set cookies
-//}));
+    if( !req.body.username || !req.body.password ){
+        return res.status(401).json({'message': 'bye'});
+    }
+    const cookie = {
+        'username': req.body.username,
+        'password': req.body.password,
+    };
+    res.cookie(cookie).status(200).json({'message': 'free cookies'});
+}));
 
-//router.get('/', asyncMiddleware(async (req, res) => {
-    //verify cookies
-//}));
-
+router.get('/', asyncMiddleware(async (req, res) => {
+    // get cookie
+    if( req.cookie)
+}));
+*/
 /*
 JWT-based authentication
 */
