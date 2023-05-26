@@ -15,15 +15,16 @@ router.post('/', asyncMiddleware(async (req, res) => {
         return res.status(401).json({'message': 'bye'});
     }
 
-    if( req.body.username === 'CNS-user' && req.body.password === 'CNS-password' ){
-        return res.status(401).json({'message': 'bye'});
-    }
-
-    res.cookie('username', req.body.username);
-    res.cookie('password', req.body.password);
     console.log(req.body.username)
     console.log(req.body.password)
-    return res.status(200).json({'message': 'free cookies!'});
+
+    if( req.body.username === 'CNS-user' && req.body.password === 'CNS-password' ){
+        res.cookie('username', req.body.username);
+        res.cookie('password', req.body.password);
+        return res.status(200).json({'message': 'free cookies!'});
+    }
+
+    return res.status(401).json({'message': 'bye'});
 }));
 
 router.get('/', asyncMiddleware(async (req, res) => {
