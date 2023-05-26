@@ -39,12 +39,10 @@ router.post('/', asyncMiddleware(async (req, res) => {
     if( !req.body.username || !req.body.password ){
         return res.status(401).json({'message': 'bye'});
     }
-    console.log(req.body)
-    const cookie = {
-        username: req.body.username,
-        password: req.body.password,
-    };
-    res.cookie(cookie).status(200).json({'message': 'free cookies'});
+
+    res.cookie('username', req.body.username);
+    res.cookie('password', req.body.password);
+    return res.status(200).json({'message': 'free cookies!'});
 }));
 
 router.get('/', asyncMiddleware(async (req, res) => {
