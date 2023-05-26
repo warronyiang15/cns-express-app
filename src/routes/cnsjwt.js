@@ -25,8 +25,26 @@ router.get('/', asyncMiddleware(async (req, res) => {
     //verify cookies
     console.log(req.body);
     console.log(req.headers);
-    console.log(req.cookies)
-    return res.status(200).json({'message': 'debug'});
+    console.log(req.cookies);
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!token) {
+        return res.status(401).json({'message': 'bye'});
+    }
+    jwt.verify(token, JWT_SECRET, (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(401).json({'message': 'what token is this?!'});
+        }
+        console.log(result.username);
+        console.log(result.password);
+        if( result.username === 'CNS-user' && result.password === 'CNS-password' ) {
+            res.status(200).json({'message': 'hi'});
+        }
+        else{
+            res.status(401).json({'message': 'bye'});
+        }
+    });
 }));
 
 module.exports = router;
