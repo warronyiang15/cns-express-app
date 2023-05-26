@@ -40,3 +40,25 @@ router.get('/', asyncMiddleware(async (req, res) => {
     console.log(auth)
     return res.status(200).json({});
 }));
+module.exports = router;
+/* 
+Cookie-based authentication
+*/
+//router.post('/', asyncMiddleware(async (req, res) => {
+    //set cookies
+//}));
+
+//router.get('/', asyncMiddleware(async (req, res) => {
+    //verify cookies
+//}));
+
+/*
+JWT-based authentication
+*/
+//router.post('/', asyncMiddleware(async (req, res) => {
+    //set cookies
+//}));
+
+//router.get('/', asyncMiddleware(async (req, res) => {
+    //verify cookies
+//}));
