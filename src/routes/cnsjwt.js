@@ -17,27 +17,35 @@ router.post('/', asyncMiddleware(async (req, res) => {
     if( !req.body.username || !req.body.password ){
         return res.status(401).json({'message': 'bye'});
     }
-    const token = jwt.sign(
-        { 
-            username: req.body.username,
-            password: req.body.password    
-        },
-        JWT_SECRET,
-        {
-          expiresIn: "2h",
-        }
-    );
-    return res.status(200).json(token);
+    if( req.body.username === 'CNS-user' && req.body.password === 'CNS-password' ){
+        const token = jwt.sign(
+            { 
+                username: req.body.username,
+                password: req.body.password    
+            },
+            JWT_SECRET,
+            {
+              expiresIn: "2h",
+            }
+        );
+        return res.status(200).json(token);
+    }
+    else{
+        return res.status(401).json({'message': 'bye'});
+    }
 }));
 
 router.get('/', asyncMiddleware(async (req, res) => {
     //verify cookies
     console.log(req.headers);
     const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
+    let token = authHeader && authHeader.split(" ")[1];
     console.log(token);
     if (!token) {
         return res.status(401).json({'message': 'bye'});
+    }
+    if( token[0] === '"' || token[token.length - 1] === '"' ){
+        token = token.substring(1, token.length - 1);
     }
     jwt.verify(token, JWT_SECRET, (err, result) => {
         if (err) {
