@@ -37,30 +37,30 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
 router.get('/', asyncMiddleware(async (req, res) => {
     //verify cookies
-    console.log(req.headers);
     const authHeader = req.headers["authorization"];
     let token = authHeader && authHeader.split(" ")[1];
-    console.log(token);
     if (!token) {
         return res.status(401).json({'message': 'bye'});
     }
     if( token[0] === '"' || token[token.length - 1] === '"' ){
         token = token.substring(1, token.length - 1);
     }
-    jwt.verify(token, JWT_SECRET, (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(401).json({'message': 'what token is this?!'});
-        }
-        console.log(result.username);
-        console.log(result.password);
-        if( result.username === 'CNS-user' && result.password === 'CNS-password' ) {
-            res.status(200).json({'message': 'hi'});
-        }
-        else{
-            res.status(401).json({'message': 'bye'});
-        }
-    });
+    try{
+        jwt.verify(token, JWT_SECRET, (err, result) => {
+            if (err) {
+            return res.status(401).json({'message': 'what token is this?!'});
+            }
+            if( result.username === 'CNS-user' && result.password === 'CNS-password' ) {
+                res.status(200).json({'message': 'LETS GOOOOO!'});
+            }
+            else{
+                res.status(401).json({'message': 'bye'});
+            }
+        });
+    }
+    catch{
+        return res.status(401).json({'message': 'bye'});
+    }
 }));
 
 module.exports = router;
