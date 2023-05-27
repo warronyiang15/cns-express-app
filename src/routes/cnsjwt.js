@@ -32,11 +32,10 @@ router.post('/', asyncMiddleware(async (req, res) => {
 
 router.get('/', asyncMiddleware(async (req, res) => {
     //verify cookies
-    console.log(req.body);
     console.log(req.headers);
-    console.log(req.cookies);
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
+    console.log(token);
     if (!token) {
         return res.status(401).json({'message': 'bye'});
     }
